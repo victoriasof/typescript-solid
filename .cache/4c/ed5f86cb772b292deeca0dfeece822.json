@@ -1,0 +1,1 @@
+{"id":"index.html","dependencies":[{"name":"./index.js","dynamic":true,"resolved":"/var/www/typescript-solid/index.js","parent":"/var/www/typescript-solid/index.html"}],"generated":{"html":"<html>\n<body>\n<script src=\"/168726dbe96b3ce427e7fedce31bb0bc.js\"></script>\n</body>\n</html>"},"sourceMaps":null,"error":null,"hash":"bd452a10b8954f84d5de0dd134b3a489","cacheData":{}}
