@@ -2,11 +2,8 @@ var Car = /** @class */ (function () {
     function Car(MAXIMUM_FUEL_CAPACITY) {
         //it is convention to start property names in TypeScript with an underscore.
         // If you want to known why, remove the underscore and see if your compiler is throwing you an error!
-        this._musicLevel = 0;
-        this._oldMusicLevel = 50;
         this._fuel = 0;
         this._miles = 0;
-        this._engineStatus = false;
         this.FUEL_MILEAGE = 10;
         this.MAXIMUM_FUEL_CAPACITY = MAXIMUM_FUEL_CAPACITY;
     }
@@ -17,25 +14,8 @@ var Car = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Car.prototype, "musicLevel", {
-        //Take attention to these getter and setters
-        get: function () {
-            return this._musicLevel;
-        },
-        set: function (value) {
-            this._musicLevel = value;
-            this._oldMusicLevel = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Car.prototype.turnMusicOn = function () {
-        this._musicLevel = this._oldMusicLevel;
-    };
-    Car.prototype.turnMusicOff = function () {
-        this._musicLevel = 0;
-    };
     Object.defineProperty(Car.prototype, "fuel", {
+        //Take attention to these getter and setters
         get: function () {
             return this._fuel;
         },
@@ -48,21 +28,8 @@ var Car = /** @class */ (function () {
     Car.prototype.addFuel = function (fuel) {
         this._fuel = Math.min(fuel + this._fuel, this.MAXIMUM_FUEL_CAPACITY);
     };
-    Object.defineProperty(Car.prototype, "engineStatus", {
-        get: function () {
-            return this._engineStatus;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Car.prototype.turnEngineOn = function () {
-        this._engineStatus = true;
-    };
-    Car.prototype.turnEngineOff = function () {
-        this._engineStatus = false;
-    };
     Car.prototype.drive = function () {
-        if (this.engineStatus === false || this._fuel <= 0) {
+        if (engine.engineStatus === false || this._fuel <= 0) { //CHANGED CAR TO ENGINE
             //what I am doing here is a good principle called "failing early"
             // If you have some conditions you need to check, that will exclude most of the code in your function check that first
             // This prevents your "happy path" of code to be deeply indented.
@@ -72,6 +39,51 @@ var Car = /** @class */ (function () {
         this._miles += this.FUEL_MILEAGE;
     };
     return Car;
+}());
+//CREATED CLASS MUSICPLAYER, MOVED THE RELEVANT VARIABLES AND METHODS INSIDE IT
+var MusicPlayer = /** @class */ (function () {
+    function MusicPlayer() {
+        this._musicLevel = 0;
+        this._oldMusicLevel = 50;
+    }
+    Object.defineProperty(MusicPlayer.prototype, "musicLevel", {
+        get: function () {
+            return this._musicLevel;
+        },
+        set: function (value) {
+            this._musicLevel = value;
+            this._oldMusicLevel = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    MusicPlayer.prototype.turnMusicOn = function () {
+        this._musicLevel = this._oldMusicLevel;
+    };
+    MusicPlayer.prototype.turnMusicOff = function () {
+        this._musicLevel = 0;
+    };
+    return MusicPlayer;
+}());
+//CREATED CLASS ENGINE, MOVED THE RELEVANT VARIABLES AND METHODS INSIDE IT
+var Engine = /** @class */ (function () {
+    function Engine() {
+        this._engineStatus = false;
+    }
+    Object.defineProperty(Engine.prototype, "engineStatus", {
+        get: function () {
+            return this._engineStatus;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Engine.prototype.turnEngineOn = function () {
+        this._engineStatus = true;
+    };
+    Engine.prototype.turnEngineOff = function () {
+        this._engineStatus = false;
+    };
+    return Engine;
 }());
 // When you see <cast>variable this is a "cast" of a variable, explicitly telling the code what the type of this variable will be.
 // This is sometimes needed when a default JS function does not return a precise enough Type.
@@ -86,33 +98,39 @@ var fuelLevelElement = document.querySelector('#fuel-level');
 var milesElement = document.querySelector('#miles-value');
 var audioElement = document.querySelector('#car-music');
 var car = new Car(100);
+//CREATED NEW INSTANCES:
+var music = new MusicPlayer();
+var engine = new Engine();
 musicToggleElement.addEventListener('click', function () {
-    if (car.musicLevel === 0) {
-        car.turnMusicOn();
-        musicSliderElement.value = car.musicLevel.toString();
+    if (music.musicLevel === 0) {
+        music.turnMusicOn();
+        musicSliderElement.value = music.musicLevel.toString(); //CHANGED CAR TO MUSIC
         musicToggleElement.innerText = 'Turn music off';
         return;
     }
     musicToggleElement.innerText = 'Turn music on';
-    car.turnMusicOff();
+    music.turnMusicOff();
 });
+//CHANGED CAR TO MUSIC
 //I use input instead of change, because then the value changes when I move the mouse, not only on release
 musicSliderElement.addEventListener('input', function (event) {
     var target = (event.target);
-    car.musicLevel = target.value;
-    audioElement.volume = car.musicLevel / 100;
+    music.musicLevel = target.value;
+    audioElement.volume = music.musicLevel / 100;
     //@todo when you are repeating the same text over and over again maybe we should have made some constants for it? Can you do improve on this?
-    musicToggleElement.innerText = car.musicLevel ? 'Turn music off' : 'Turn music on';
+    musicToggleElement.innerText = music.musicLevel ? 'Turn music off' : 'Turn music on';
 });
+//CHANGED CAR TO MUSIC
 engineToggleElement.addEventListener('click', function () {
-    if (car.engineStatus) {
-        car.turnEngineOff();
+    if (engine.engineStatus) {
+        engine.turnEngineOff();
         engineToggleElement.innerText = 'Turn engine on';
         return;
     }
     engineToggleElement.innerText = 'Turn engine off';
-    car.turnEngineOn();
+    engine.turnEngineOn();
 });
+//CHANGED CAR TO ENGINE
 addFuelForm.addEventListener('submit', function (event) {
     event.preventDefault();
     car.addFuel(Number(addFuelInput.value));
@@ -125,7 +143,7 @@ setInterval(function () {
     milesElement.innerText = (car.miles);
     // This .toString() will actually convert the value in JavaScript from an integer to a string
     fuelLevelElement.innerText = car.fuel.toString();
-    if (car.musicLevel === 0) {
+    if (music.musicLevel === 0) { //CHANGED CAR TO MUSIC
         audioElement.pause();
     }
     else {
