@@ -1,0 +1,12 @@
+{
+  "name": "2.L",
+  "version": "1.0.0",
+  "description": "\"Objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program.\" See also [design by contract](https://en.wikipedia.org/wiki/Design_by_contract).",
+  "main": "new.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -2,14 +2,16 @@
 type discountType = "variable" | "fixed" | "none";
 
 interface Discount {
-    _type: discountType;
-    _value: number;
+    _type: discountType; //removed private
+    _value: number; //removed private
 
+    //added following functions:
     getDiscount(price: number): number;
-
     showCalculation(price: number): string;
 
     /*
+    REMOVED CONSTRUCTOR:
+
     constructor(type : discountType, value : number = 0) {
         this._type = type;
         this._value = value;
@@ -20,6 +22,8 @@ interface Discount {
     */
 
     }
+
+    //created classes for variable/fixed/no discount which implement interface discount
 
     class VariableDiscount implements Discount {
 
@@ -148,7 +152,7 @@ class Product {
     //The reason we call this function "calculateX" instead of using a getter on Price is because names communicate a lot of meaning between programmers.
     //most programmers would assume a getPrice() would be a simple display of a property that is already calculated, but in fact this function does a (more expensive) operation to calculate on the fly.
     calculatePrice() : number {
-        return this._discount.getDiscount(this._price);
+        return this._discount.getDiscount(this._price); //changed apply to getDiscount
     }
 
     showCalculation() : string {
@@ -170,10 +174,10 @@ class shoppingBasket {
 }
 
 let cart = new shoppingBasket();
-cart.addProduct(new Product('Chair', 25, new FixedDiscount(10))); //removed "fixed"
+cart.addProduct(new Product('Chair', 25, new FixedDiscount(10))); //added Fixed, removed "fixed"
 //cart.addProduct(new Product('Chair', 25, new Discount("fixed", -10)));
-cart.addProduct(new Product('Table', 50, new VariableDiscount( 25))); //removed "variable"
-cart.addProduct(new Product('Bed', 100, new NoDiscount())); //removed "none"
+cart.addProduct(new Product('Table', 50, new VariableDiscount( 25))); //added Variable, removed "variable"
+cart.addProduct(new Product('Bed', 100, new NoDiscount())); //added No, removed "none"
 
 const tableElement = document.querySelector('#cart tbody');
 cart.products.forEach((product) => {

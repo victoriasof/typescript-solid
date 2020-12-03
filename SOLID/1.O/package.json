@@ -1,0 +1,12 @@
+{
+  "name": "1.O",
+  "version": "1.0.0",
+  "description": "Classes should be open for extension, but closed for modification. In more simple words you can always add new code to an object, but you should never change the design of old code.",
+  "main": "new.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
