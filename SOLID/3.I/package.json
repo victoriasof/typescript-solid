@@ -1,0 +1,12 @@
+{
+  "name": "3.I",
+  "version": "1.0.0",
+  "description": "\"Many client-specific interfaces are better than one general-purpose interface.\"",
+  "main": "old.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

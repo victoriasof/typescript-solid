@@ -1,15 +1,29 @@
+
 interface UserAuth {
-    checkPassword(password: string) : boolean;
-    resetPassword();
 
     setGoogleToken(token : string);
     checkGoogleLogin(token : string) : boolean;
-
     setFacebookToken(token : string);
     getFacebookLogin(token : string) : boolean;
 }
 
-class User implements UserAuth {
+//added interface Auth and GoogleBotAuth:
+
+interface Auth {
+
+    checkPassword(password: string) : boolean;
+    resetPassword();
+}
+
+interface GoogleBotAuth {
+
+    setGoogleToken(token : string);
+    checkGoogleLogin(token : string) : boolean;
+
+}
+
+
+class User implements UserAuth, Auth {
     private _password : string = 'user';
     private _facebookToken : string;
     private _googleToken : string;
@@ -24,7 +38,6 @@ class User implements UserAuth {
     setGoogleToken(token : string) {
         this._googleToken = token;
     }
-
 
     getFacebookLogin(token) {
         return (token === this._facebookToken);
@@ -44,15 +57,20 @@ class User implements UserAuth {
 }
 
 //admin cannot use google or facebook token
-class Admin implements UserAuth {
+class Admin implements Auth { //changed UserAuth to Auth
     private _password : string = 'admin';
-
-    checkGoogleLogin(token: string): boolean {
-        return false;
-    }
 
     checkPassword(password: string): boolean {
         return (password === this._password);
+    }
+
+    resetPassword() {
+        this._password = prompt('What is your new password?');
+    }
+
+    /*
+    checkGoogleLogin(token: string): boolean {
+        return false;
     }
 
     getFacebookLogin(token: string): boolean {
@@ -66,10 +84,30 @@ class Admin implements UserAuth {
     setGoogleToken() {
         throw new Error('Function not supported for admins');
     }
+    */
+
+}
+
+class GoogleBot implements Auth, GoogleBotAuth {
+
+    private _password : string = 'google';
+
+    checkPassword(password: string): boolean {
+        return false;
+    }
 
     resetPassword() {
         this._password = prompt('What is your new password?');
     }
+
+    checkGoogleLogin(token: string): boolean {
+        return false;
+    }
+
+    setGoogleToken(token: string) {
+        throw new Error('Function not supported for admins');
+    }
+
 }
 
 // class GoogleBot implements UserAuth {}
@@ -83,11 +121,14 @@ const resetPasswordElement = <HTMLAnchorElement>document.querySelector('#resetPa
 
 let guest = new User;
 let admin = new Admin;
+let googlebot = new GoogleBot; // added googlebot
 
 document.querySelector('#login-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
     let user = loginAsAdminElement.checked ? admin : guest;
+
+    //console.log(user);
 
     if(!loginAsAdminElement.checked) {
         user.setGoogleToken('secret_token_google');
@@ -117,8 +158,8 @@ document.querySelector('#login-form').addEventListener('submit', (event) => {
 });
 
 resetPasswordElement.addEventListener('click', (event) => {
-   event.preventDefault();
+    event.preventDefault();
 
-   let user = loginAsAdminElement.checked ? admin : guest;
-   user.resetPassword();
+    let user = loginAsAdminElement.checked ? admin : guest;
+    user.resetPassword();
 });

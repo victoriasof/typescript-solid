@@ -1,3 +1,4 @@
+//created classes for variable/fixed/no discount which implement interface discount
 var VariableDiscount = /** @class */ (function () {
     function VariableDiscount(value) {
         if (value === void 0) { value = 0; }
@@ -111,7 +112,7 @@ var Product = /** @class */ (function () {
     //The reason we call this function "calculateX" instead of using a getter on Price is because names communicate a lot of meaning between programmers.
     //most programmers would assume a getPrice() would be a simple display of a property that is already calculated, but in fact this function does a (more expensive) operation to calculate on the fly.
     Product.prototype.calculatePrice = function () {
-        return this._discount.getDiscount(this._price);
+        return this._discount.getDiscount(this._price); //changed apply to getDiscount
     };
     Product.prototype.showCalculation = function () {
         return this._discount.showCalculation(this._price);
@@ -136,10 +137,10 @@ var shoppingBasket = /** @class */ (function () {
     return shoppingBasket;
 }());
 var cart = new shoppingBasket();
-cart.addProduct(new Product('Chair', 25, new FixedDiscount(10))); //removed "fixed"
+cart.addProduct(new Product('Chair', 25, new FixedDiscount(10))); //added Fixed, removed "fixed"
 //cart.addProduct(new Product('Chair', 25, new Discount("fixed", -10)));
-cart.addProduct(new Product('Table', 50, new VariableDiscount(25))); //removed "variable"
-cart.addProduct(new Product('Bed', 100, new NoDiscount())); //removed "none"
+cart.addProduct(new Product('Table', 50, new VariableDiscount(25))); //added Variable, removed "variable"
+cart.addProduct(new Product('Bed', 100, new NoDiscount())); //added No, removed "none"
 var tableElement = document.querySelector('#cart tbody');
 cart.products.forEach(function (product) {
     var tr = document.createElement('tr');
